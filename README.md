@@ -35,7 +35,14 @@ See [docs/MARKET_RESEARCH.md](docs/MARKET_RESEARCH.md) for the competitive analy
 2. Open the APK on your phone and allow installing from that source.
 3. Open ReelOff, read the disclosure, tap **Agree and continue**, then go to
    **Accessibility → Installed apps → ReelOff** and turn it on.
-4. If the toggle is greyed out (Android 13+ "restricted setting"), go to
+4. **"App not installed to protect you" / "App blocked to protect your device"**: Google Play
+   Protect blocks apps that ask for Accessibility when they are installed from outside the Play
+   Store. This is strictest in India. To get around it, do one of these:
+   - In the Play Store, tap your profile picture, then **Play Protect → ⚙ Settings**. Turn off
+     **Scan apps with Play Protect**, install the APK, then turn scanning back on.
+   - Or install from a computer: `adb install ReelOff.apk`.
+   - Permanent fix: publish to a Google Play internal-testing track and install from there.
+5. If the toggle is greyed out (Android 13+ "restricted setting"), go to
    **App info → ⋮ → Allow restricted settings** and try again. The app links you there.
 
 ## Architecture
