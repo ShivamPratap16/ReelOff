@@ -14,6 +14,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      # Optional Google Play upload key (docs/PUBLISHING.md). Empty on forks and before setup.
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      REELOFF_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      REELOFF_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      REELOFF_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,9 +33,15 @@ jobs:
       - name: Unit tests (detection engine)
         run: ./gradlew :core:test --stacktrace
 
-      - name: Build APKs
+      - name: Decode Play upload key
+        if: env.KEYSTORE_BASE64 != ''
         run: |
-          ./gradlew :app:assembleDebug :app:assembleRelease \
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          echo "REELOFF_KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+
+      - name: Build APKs and Play bundle
+        run: |
+          ./gradlew :app:assembleDebug :app:assembleRelease :app:bundleRelease \
             -PversionCode=${{ github.run_number }} \
             -PversionName=1.0.${{ github.run_number }} \
             --stacktrace
@@ -42,12 +54,15 @@ jobs:
           mkdir -p dist
           cp app/build/outputs/apk/debug/app-debug.apk dist/ReelOff-debug.apk
           cp app/build/outputs/apk/release/app-release.apk dist/ReelOff.apk
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            cp app/build/outputs/bundle/release/app-release.aab dist/ReelOff-play.aab
+          fi
           ls -la dist
 
       - uses: actions/upload-artifact@v4
         with:
           name: ReelOff-apk
-          path: dist/*.apk
+          path: dist/*
 
       - uses: actions/upload-artifact@v4
         if: always()
