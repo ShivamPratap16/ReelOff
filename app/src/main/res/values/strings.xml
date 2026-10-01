@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ReelOff</string>
+    <string name="service_label">ReelOff short-video blocker</string>
+    <string name="service_summary">Closes YouTube Shorts, Instagram Reels and endless feeds</string>
+    <string name="service_description">ReelOff uses this permission to recognise when YouTube Shorts, Instagram Reels, Facebook Reels, Snapchat Spotlight, TikTok or a feed you chose to limit is on screen, and then presses Back or Home for you. It only looks at the apps you choose, reads screen structure (view ids and labels) rather than your messages, stores nothing but block counts, and has no internet permission, so nothing ever leaves your phone.</string>
+</resources>
